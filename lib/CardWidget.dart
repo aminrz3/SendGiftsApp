@@ -85,6 +85,8 @@ class _CardWidgetState extends State<CardWidget> {
                 secondPageTitleLine2: widget.secondPageTitleLine2) :
             Carditem(
                 cardColor: widget.cardColor,
+                cardColorOpacity: widget.cardColorOpacity,
+                cardDetailBoxColor: widget.cardDetailBoxColor,
                 shadowColor: widget.shadowColor,
                 cardTextColor: widget.cardTextColor,
                 cardNumberBoxColor: widget.cardNumberBoxColor,

@@ -1,6 +1,6 @@
 # Send Gifts Application
 
-Welcome to the GIF Sending Application! This Flutter app concept with beautiful animations and a seamless experience.
+Welcome to the Send Gifts Application! This Flutter app concept with beautiful animations and a seamless experience.
 
 ## Demo
 ![](demo/demo.gif)

@@ -173,143 +173,149 @@ class _SendGiftsState extends State<SendGifts> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final currentCardData = cards[currentCard] as CardWidget;
-    return Stack(
-      children: [
-        SlideTransition(
-          position: _headerFooterOffsetAnimation,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const HeaderWidget(),
-              const SizedBox(height: 80),
-              SlideTransition(
-                position: _pagerOffsetAnimation,
-                child: Container(
-                  margin: const EdgeInsets.only(left: 25),
-                  width: 40,
-                  child: PagerWidget(
-                    numOfCards: itemCount,
-                    currentCard: currentCard,
-                  ),
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-              FooterWidget(itemCount: itemCount),
-            ],
-          ),
-        ),
-        AnimatedBuilder(
-          animation: _centerAnimationController,
-          builder: (context, child) {
-            return Opacity(
-              opacity: _centerOpacity,
-              child: Center(
-                child: Transform.translate(
-                  offset: _centerOffsetAnimation.value,
-                  child: SizedBox(
-                    height: _centerHeightAnimation.value,
-                    child: CardWidget(
-                      cardColor: currentCardData.cardColor,
-                      cardColorOpacity: currentCardData.cardColorOpacity,
-                      shadowColor: currentCardData.shadowColor,
-                      isVisibleShadow: false,
-                      cardTextColor: currentCardData.cardTextColor,
-                      cardNumberBoxColor: currentCardData.cardNumberBoxColor,
-                      cardDetailBoxColor: currentCardData.cardDetailBoxColor,
-                      cardImagePath: currentCardData.cardImagePath,
-                      description: currentCardData.description,
-                      descriptionColor: currentCardData.descriptionColor,
-                      titleLine1: currentCardData.titleLine1,
-                      titleLine2: currentCardData.titleLine2,
-                      quantity: currentCardData.quantity,
-                      viewingText: currentCardData.viewingText,
-                      boughtText: currentCardData.boughtText,
-                      borderRadius: _borderRadiusAnimation.value!,
-                      secondPageText: currentCardData.secondPageText,
-                      buyButtonColor: currentCardData.buyButtonColor,
-                      secondPageTitleLine1: currentCardData.secondPageTitleLine1,
-                      secondPageTitleLine2: currentCardData.secondPageTitleLine2,
-                      isStartSecondPageAnimation: _isStartSecondPageAnimation,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-          child: cards[currentCard],
-        ),
-        CardCarousel(
-          cards: cards,
-          itemCount: itemCount,
-          currentCardCallback: (currentCardCallback) {
-            setState(() {
-              currentCard = currentCardCallback;
-            });
-          },
-          onClick: () {
-
-            _handleItemClick(true);
-          },
-          onAnimationComplete: _startCenterAnimation,
-          isReverse: isReverseCardWidgetAnimation,
-        ),
-        SlideTransition(
-          position: _navbarOffsetAnimation,
-          child: Container(
-            margin: EdgeInsets.only(top:Constant.paddingTop),
-            child: Stack(
+    return Container(
+      width: Get.width,
+      decoration: const BoxDecoration(
+          color: ColorTheme.bg
+      ),
+      child: Stack(
+        children: [
+          SlideTransition(
+            position: _headerFooterOffsetAnimation,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset("assets/images/navbar.png",color: currentCardData.cardColor == ColorTheme.whiteCard ? ColorTheme.blackCard : ColorTheme.whiteCard),
-                Positioned(
-                  width: 100,
-                  height: 50,
-                  bottom: 18,
-                  left: 42,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: (){
-                      _handleItemClick(false);
-                    },
-                    child: AnimatedBuilder(
-                        animation: _arrowAnimationController,
-                        child: Row(
-                          children: [
-                            Image.asset('assets/images/arrow_right.png',scale: 1.8, color: currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,),
-                            const SizedBox(width: 5,),
-                            Image.asset('assets/images/arrow_right.png',scale: 1.8, color: currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,),
-                            const SizedBox(width: 5,),
-                            Image.asset('assets/images/arrow_right.png',scale: 1.8, color: currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,),
-                          ],
-                        ),
-                        builder: (context , child){
-
-                          return ShaderMask(
-                            shaderCallback: (bounds) => LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              transform: SlideGradientTransform(
-                                percent: _arrowAnimationController.value,
-                              ),
-                              colors: [
-                                currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.3),
-                                currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,
-                                currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,
-                                currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.3),
-                              ],
-
-
-                            ).createShader(bounds),
-                            child: child,
-                          );
-                        }
+                const HeaderWidget(),
+                const SizedBox(height: 80),
+                SlideTransition(
+                  position: _pagerOffsetAnimation,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 25),
+                    width: 40,
+                    child: PagerWidget(
+                      numOfCards: itemCount,
+                      currentCard: currentCard,
                     ),
                   ),
-                )
+                ),
+                const Expanded(child: SizedBox()),
+                FooterWidget(itemCount: itemCount),
               ],
             ),
           ),
-        ),
-      ],
+          AnimatedBuilder(
+            animation: _centerAnimationController,
+            builder: (context, child) {
+              return Opacity(
+                opacity: _centerOpacity,
+                child: Center(
+                  child: Transform.translate(
+                    offset: _centerOffsetAnimation.value,
+                    child: SizedBox(
+                      height: _centerHeightAnimation.value,
+                      child: CardWidget(
+                        cardColor: currentCardData.cardColor,
+                        cardColorOpacity: currentCardData.cardColorOpacity,
+                        shadowColor: currentCardData.shadowColor,
+                        isVisibleShadow: false,
+                        cardTextColor: currentCardData.cardTextColor,
+                        cardNumberBoxColor: currentCardData.cardNumberBoxColor,
+                        cardDetailBoxColor: currentCardData.cardDetailBoxColor,
+                        cardImagePath: currentCardData.cardImagePath,
+                        description: currentCardData.description,
+                        descriptionColor: currentCardData.descriptionColor,
+                        titleLine1: currentCardData.titleLine1,
+                        titleLine2: currentCardData.titleLine2,
+                        quantity: currentCardData.quantity,
+                        viewingText: currentCardData.viewingText,
+                        boughtText: currentCardData.boughtText,
+                        borderRadius: _borderRadiusAnimation.value!,
+                        secondPageText: currentCardData.secondPageText,
+                        buyButtonColor: currentCardData.buyButtonColor,
+                        secondPageTitleLine1: currentCardData.secondPageTitleLine1,
+                        secondPageTitleLine2: currentCardData.secondPageTitleLine2,
+                        isStartSecondPageAnimation: _isStartSecondPageAnimation,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+            child: cards[currentCard],
+          ),
+          CardCarousel(
+            cards: cards,
+            itemCount: itemCount,
+            currentCardCallback: (currentCardCallback) {
+              setState(() {
+                currentCard = currentCardCallback;
+              });
+            },
+            onClick: () {
+
+              _handleItemClick(true);
+            },
+            onAnimationComplete: _startCenterAnimation,
+            isReverse: isReverseCardWidgetAnimation,
+          ),
+          SlideTransition(
+            position: _navbarOffsetAnimation,
+            child: Container(
+              margin: EdgeInsets.only(top:Constant.paddingTop),
+              child: Stack(
+                children: [
+                  Image.asset("assets/images/navbar.png",color: currentCardData.cardColor == ColorTheme.whiteCard ? ColorTheme.blackCard : ColorTheme.whiteCard),
+                  Positioned(
+                    width: 100,
+                    height: 50,
+                    bottom: 18,
+                    left: 42,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: (){
+                        _handleItemClick(false);
+                      },
+                      child: AnimatedBuilder(
+                          animation: _arrowAnimationController,
+                          child: Row(
+                            children: [
+                              Image.asset('assets/images/arrow_right.png',scale: 1.8, color: currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,),
+                              const SizedBox(width: 5,),
+                              Image.asset('assets/images/arrow_right.png',scale: 1.8, color: currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,),
+                              const SizedBox(width: 5,),
+                              Image.asset('assets/images/arrow_right.png',scale: 1.8, color: currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,),
+                            ],
+                          ),
+                          builder: (context , child){
+
+                            return ShaderMask(
+                              shaderCallback: (bounds) => LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                transform: SlideGradientTransform(
+                                  percent: _arrowAnimationController.value,
+                                ),
+                                colors: [
+                                  currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.3),
+                                  currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,
+                                  currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white : Colors.black,
+                                  currentCardData.cardColor == ColorTheme.whiteCard ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.3),
+                                ],
+
+
+                              ).createShader(bounds),
+                              child: child,
+                            );
+                          }
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

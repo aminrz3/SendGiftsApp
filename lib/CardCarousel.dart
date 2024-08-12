@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sendgifts/Utilities/Constant.dart';
 import 'package:sendgifts/utils.dart';
 
 typedef OnAnimationComplete = VoidCallback;

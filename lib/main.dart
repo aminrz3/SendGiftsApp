@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
     var bottom = MediaQuery.of(context).viewPadding.bottom;
     print(top);
     print(bottom);
-    Constant.paddingBottom = bottom;
-    Constant.paddingTop = top;
+    Constant.paddingBottom = bottom+25;
+    Constant.paddingTop = top+25;
 
     return Scaffold(
       body: Container(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sendgifts/Utilities/ColorTheme.dart';
+import 'package:sendgifts/Utilities/Constant.dart';
 
 class FooterWidget extends StatelessWidget {
   final int itemCount;
@@ -9,7 +10,7 @@ class FooterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 25, bottom: 45),
+      padding: EdgeInsets.only(left: 25, bottom: Constant.paddingBottom),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sendgifts/utils.dart';
 
-typedef OnClick = Function(bool isItemClicked);
 typedef OnAnimationComplete = VoidCallback;
 class CardCarousel extends StatefulWidget {
   final List<Widget> cards;
   final int itemCount;
   ValueChanged<int> currentCardCallback;
-  OnClick onClick;
+  VoidCallback onClick;
   OnAnimationComplete onAnimationComplete;
-  bool isStartReverseOpacity;
+  bool isReverse;
   CardCarousel(
       {required this.cards,
         required this.itemCount,
         required this.currentCardCallback,
         required this.onClick,
         required this.onAnimationComplete,
-        this.isStartReverseOpacity = false,
+        this.isReverse = false,
         super.key});
 
   @override
@@ -28,14 +27,14 @@ class _CardCarouselState extends State<CardCarousel>
     with TickerProviderStateMixin {
   int currentCard = 0;
   bool isItemClicked = false;
+  double _currentCardOpacity = 1;
   final PageController _pageController = PageController(
     initialPage: 0,
     viewportFraction: 0.4,
   );
   late AnimationController _translateAnimationController;
-  late AnimationController _opacityAnimationController;
   late Animation<double> _horizontalOffsetAnimation;
-  late Animation<double> _opacityAnimation;
+
 
   @override
   void initState() {
@@ -47,7 +46,7 @@ class _CardCarouselState extends State<CardCarousel>
 
     _translateAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 200),
     );
 
     _horizontalOffsetAnimation = Tween<double>(
@@ -55,33 +54,19 @@ class _CardCarouselState extends State<CardCarousel>
       end: Get.width,
     ).animate(_translateAnimationController);
 
-    _opacityAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-
-    _opacityAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _opacityAnimationController,
-      curve: Curves.easeInOut,
-    ))..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        widget.onAnimationComplete();
-      }
-    });
 
     _translateAnimationController.addListener(() {
       setState(() {});
     });
 
     _translateAnimationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _opacityAnimationController.forward();
-      } else if (status == AnimationStatus.dismissed) {
-          _opacityAnimationController.reverse();
-      }
+      setState(() {
+        if (status == AnimationStatus.completed) {
+          _currentCardOpacity = 0;
+          widget.onAnimationComplete();
+        }
+      });
+
     });
 
   }
@@ -90,25 +75,29 @@ class _CardCarouselState extends State<CardCarousel>
   void dispose() {
     _pageController.dispose();
     _translateAnimationController.dispose();
-    _opacityAnimationController.dispose();
     super.dispose();
   }
 
   void _onCardTap() {
     setState(() {
-      isItemClicked = !isItemClicked;
+      isItemClicked = true;
       if (isItemClicked) {
         _translateAnimationController.forward(from: 0);
-      } else {
-        _translateAnimationController.reverse();
       }
-
-      widget.onClick(isItemClicked);
+      widget.onClick();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if(widget.isReverse && isItemClicked){
+      _currentCardOpacity = 1;
+      _translateAnimationController.reverse();
+      setState(() {
+        isItemClicked = false;
+      });
+
+    }
     return PageView.builder(
       itemCount: null,
       physics: isItemClicked ? const NeverScrollableScrollPhysics() : null,
@@ -125,9 +114,9 @@ class _CardCarouselState extends State<CardCarousel>
         Widget child = widget.cards[currentIndex];
 
         return GestureDetector(
-          onTap: _onCardTap,
+          onTap: isItemClicked ? null : _onCardTap,
           child: AnimatedBuilder(
-            animation: Listenable.merge([_pageController, _translateAnimationController, _opacityAnimationController]),
+            animation: Listenable.merge([_pageController,_translateAnimationController]),
             child: child,
             builder: (context, child) {
               double pageOffset = (_pageController.page ?? 0) - index;
@@ -135,8 +124,8 @@ class _CardCarouselState extends State<CardCarousel>
               double verticalOffset = pageOffset * 120;
               double rotate = pageOffset * 0.1;
 
-              double opacity = currentCard == currentIndex && isItemClicked
-                  ? _opacityAnimation.value
+              double opacity = currentCard == currentIndex
+                  ? _currentCardOpacity
                   : 1.0;
 
               return Opacity(
